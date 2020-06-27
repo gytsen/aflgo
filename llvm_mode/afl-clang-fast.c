@@ -88,7 +88,13 @@ static void find_obj(u8* argv0) {
   }
 
   FATAL("Unable to find 'afl-llvm-rt.o' or 'afl-llvm-pass.so'. Please set AFL_PATH");
- 
+
+}
+
+static void dump_argv(u32 argc, char** argv) {
+    for (u32 i = 0; i < argc; i++) {
+        SAYF("argv[%d] [%s]\n", i, argv[i]);
+    }
 }
 
 
@@ -98,6 +104,10 @@ static void edit_params(u32 argc, char** argv) {
 
   u8 fortify_set = 0, asan_set = 0, x_set = 0, maybe_linking = 1, bit_mode = 0;
   u8 *name;
+
+  // *incoherent screaming*
+  SAYF("dumping %d original params\n", argc);
+  dump_argv(argc, argv);
 
   cc_params = ck_alloc((argc + 128) * sizeof(u8*));
 
@@ -311,6 +321,8 @@ static void edit_params(u32 argc, char** argv) {
   }
 
   cc_params[cc_par_cnt] = NULL;
+  SAYF("dumping %d modded params\n", cc_par_cnt);
+  dump_argv(cc_par_cnt, (char**)cc_params);
 
 }
 
